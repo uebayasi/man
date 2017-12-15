@@ -14,6 +14,14 @@
 <body class="wrapper">
   <div class="manual-title">
     <h1>UVM(9) &#8212; <span class="Nd">virtual memory system external interface</span></h1>
+
+    <h2 class="Sh" id="SYNOPSIS">SYNOPSIS</h2>
+
+    <ul class="synopsis">
+      <li><span class="In">#include &lt;<a class="In">sys/param.h</a>&gt;</span></li>
+
+      <li><span class="In">#include &lt;<a class="In">uvm/uvm.h</a>&gt;</span></li>
+    </ul>
   </div>
 
   <div class="manual-content">
@@ -59,32 +67,29 @@
   </div>
 
   <div class="manual-text">
-    <h2 class="Sh" id="SYNOPSIS">SYNOPSIS</h2><span class="In">#include &lt;<a class="In">sys/param.h</a>&gt;</span><br>
-    <span class="In">#include &lt;<a class="In">uvm/uvm.h</a>&gt;</span>
+    <!--<h2 class="Sh" id="DESCRIPTION">DESCRIPTION</h2>-->
 
-    <h2 class="Sh" id="DESCRIPTION">DESCRIPTION</h2>The UVM virtual memory system manages access to the computer's memory resources. User processes and the kernel access these resources through UVM's external interface. UVM's external interface includes functions that:
+    <div class="description">
+      <p>The UVM virtual memory system manages access to the computer's memory resources. User processes and the kernel access these resources through UVM's external interface. UVM's external interface includes functions that:</p>
 
-    <div class="Pp"></div>
+      <ul class="Bl-dash">
+        <li class="It-dash">initialize UVM sub-systems</li>
 
-    <ul class="Bl-dash">
-      <li class="It-dash">initialize UVM sub-systems</li>
+        <li class="It-dash">manage virtual address spaces</li>
 
-      <li class="It-dash">manage virtual address spaces</li>
+        <li class="It-dash">resolve page faults</li>
 
-      <li class="It-dash">resolve page faults</li>
+        <li class="It-dash">memory map files and devices</li>
 
-      <li class="It-dash">memory map files and devices</li>
+        <li class="It-dash">perform uio-based I/O to virtual memory</li>
 
-      <li class="It-dash">perform uio-based I/O to virtual memory</li>
+        <li class="It-dash">allocate and free kernel virtual memory</li>
 
-      <li class="It-dash">allocate and free kernel virtual memory</li>
+        <li class="It-dash">allocate and free physical memory</li>
+      </ul>
 
-      <li class="It-dash">allocate and free physical memory</li>
-    </ul>
-
-    <div class="Pp"></div>In addition to exporting these services, UVM has two kernel-level processes: pagedaemon and swapper. The pagedaemon process sleeps until physical memory becomes scarce. When that happens, pagedaemon is awoken. It scans physical memory, paging out and freeing memory that has not been recently used. The swapper process swaps in runnable processes that are currently swapped out, if there is room.
-
-    <div class="Pp"></div>There are also several miscellaneous functions.
+      <p>In addition to exporting these services, UVM has two kernel-level processes: pagedaemon and swapper. The pagedaemon process sleeps until physical memory becomes scarce. When that happens, pagedaemon is awoken. It scans physical memory, paging out and freeing memory that has not been recently used. The swapper process swaps in runnable processes that are currently swapped out, if there is room. There are also several miscellaneous functions.</p>
+    </div>
 
     <h2 class="Sh" id="INITIALIZATION">INITIALIZATION</h2>
 
@@ -98,15 +103,11 @@
       <li class="It-ohang"><span class="Ft">void</span> <span class="Fn">uvm_swap_init</span>(<span class="Fa">void</span>);</li>
     </ul>
 
-    <div class="Pp"></div><span class="Fn">uvm_init</span>() sets up the UVM system at system boot time, after the console has been setup. It initializes global state, the page, map, kernel virtual memory state, machine-dependent physical map, kernel memory allocator, pager and anonymous memory sub-systems, and then enables paging of kernel objects.
+    <p><span class="Fn">uvm_init</span>() sets up the UVM system at system boot time, after the console has been setup. It initializes global state, the page, map, kernel virtual memory state, machine-dependent physical map, kernel memory allocator, pager and anonymous memory sub-systems, and then enables paging of kernel objects. <span class="Fn">uvm_init_limits</span>() initializes process limits for the named process. This is for use by the system startup for process zero, before any other processes are created. <span class="Fn">uvm_md_init</span>() does early boot initialization. This currently includes: <span class="Fn">uvm_setpagesize</span>() which initializes the uvmexp members pagesize (if not already done by machine-dependent code), pageshift and pagemask. <span class="Fn">uvm_physseg_init</span>() which initialises the <a class="Xr">uvm_hotplug(9)</a> subsystem. It should be called by machine-dependent code early in the <span class="Fn">pmap_init</span>() call (see <a class="Xr">pmap(9)</a>). <span class="Fn">uvm_swap_init</span>() initializes the swap sub-system.</p>
 
-    <div class="Pp"></div><span class="Fn">uvm_init_limits</span>() initializes process limits for the named process. This is for use by the system startup for process zero, before any other processes are created.
+    <h2 class="Sh" id="VIRTUAL_ADDRESS_SPACE_MANAGEMENT">VIRTUAL ADDRESS SPACE MANAGEMENT</h2>
 
-    <div class="Pp"></div><span class="Fn">uvm_md_init</span>() does early boot initialization. This currently includes: <span class="Fn">uvm_setpagesize</span>() which initializes the uvmexp members pagesize (if not already done by machine-dependent code), pageshift and pagemask. <span class="Fn">uvm_physseg_init</span>() which initialises the <a class="Xr">uvm_hotplug(9)</a> subsystem. It should be called by machine-dependent code early in the <span class="Fn">pmap_init</span>() call (see <a class="Xr">pmap(9)</a>).
-
-    <div class="Pp"></div><span class="Fn">uvm_swap_init</span>() initializes the swap sub-system.
-
-    <h2 class="Sh" id="VIRTUAL_ADDRESS_SPACE_MANAGEMENT">VIRTUAL ADDRESS SPACE MANAGEMENT</h2>See <a class="Xr">uvm_map(9)</a>.
+    <p>See <a class="Xr">uvm_map(9)</a>.</p>
 
     <h2 class="Sh" id="PAGE_FAULT_HANDLING">PAGE FAULT HANDLING</h2>
 
@@ -114,7 +115,7 @@
       <li class="It-ohang"><span class="Ft">int</span> <span class="Fn">uvm_fault</span>(<span class="Fa">struct vm_map *orig_map</span>, <span class="Fa">vaddr_t vaddr</span>, <span class="Fa">vm_prot_t access_type</span>);</li>
     </ul>
 
-    <div class="Pp"></div><span class="Fn">uvm_fault</span>() is the main entry point for faults. It takes <span class="Fa">orig_map</span> as the map the fault originated in, a <span class="Fa">vaddr</span> offset into the map the fault occurred, and <span class="Fa">access_type</span> describing the type of access requested. <span class="Fn">uvm_fault</span>() returns a standard UVM return value.
+    <p><span class="Fn">uvm_fault</span>() is the main entry point for faults. It takes <span class="Fa">orig_map</span> as the map the fault originated in, a <span class="Fa">vaddr</span> offset into the map the fault occurred, and <span class="Fa">access_type</span> describing the type of access requested. <span class="Fn">uvm_fault</span>() returns a standard UVM return value.</p>
 
     <h2 class="Sh" id="MEMORY_MAPPING_FILES_AND_DEVICES">MEMORY MAPPING FILES AND DEVICES</h2>See <a class="Xr">ubc(9)</a>.
 
@@ -124,7 +125,7 @@
       <li class="It-ohang"><span class="Ft">int</span> <span class="Fn">uvm_io</span>(<span class="Fa">struct vm_map *map</span>, <span class="Fa">struct uio *uio</span>);</li>
     </ul>
 
-    <div class="Pp"></div><span class="Fn">uvm_io</span>() performs the I/O described in <span class="Fa">uio</span> on the memory described in <span class="Fa">map</span>.
+    <p><span class="Fn">uvm_io</span>() performs the I/O described in <span class="Fa">uio</span> on the memory described in <span class="Fa">map</span>.</p>
 
     <h2 class="Sh" id="ALLOCATION_OF_KERNEL_MEMORY">ALLOCATION OF KERNEL MEMORY</h2>See <a class="Xr">uvm_km(9)</a>.
 
@@ -142,11 +143,7 @@
       <li class="It-ohang"><span class="Ft">void</span> <span class="Fn">uvm_pglistfree</span>(<span class="Fa">struct pglist *list</span>);</li>
 
       <li class="It-ohang"><span class="Ft">void</span> <span class="Fn">uvm_page_physload</span>(<span class="Fa">paddr_t start</span>, <span class="Fa">paddr_t end</span>, <span class="Fa">paddr_t avail_start</span>, <span class="Fa">paddr_t avail_end</span>, <span class="Fa">int free_list</span>);</li>
-    </ul>
-
-    <div class="Pp"></div><span class="Fn">uvm_pagealloc</span>() allocates a page of memory at virtual address <span class="Fa">off</span> in either the object <span class="Fa">uobj</span> or the anonymous memory <span class="Fa">anon</span>, which must be locked by the caller. Only one of <span class="Fa">uobj</span> and <span class="Fa">anon</span> can be non <code class="Dv">NULL</code>. Returns <code class="Dv">NULL</code> when no page can be found. The flags can be any of
-
-    <div class="Pp"></div>
+    </ul><span class="Fn">uvm_pagealloc</span>() allocates a page of memory at virtual address <span class="Fa">off</span> in either the object <span class="Fa">uobj</span> or the anonymous memory <span class="Fa">anon</span>, which must be locked by the caller. Only one of <span class="Fa">uobj</span> and <span class="Fa">anon</span> can be non <code class="Dv">NULL</code>. Returns <code class="Dv">NULL</code> when no page can be found. The flags can be any of
 
     <div class="Bd">
       <pre class="Li">
@@ -155,17 +152,19 @@
 </pre>
     </div>
 
-    <div class="Pp"></div><code class="Dv">UVM_PGA_USERESERVE</code> means to allocate a page even if that will result in the number of free pages being lower than <code class="Dv">uvmexp.reserve_pagedaemon</code> (if the current thread is the pagedaemon) or <code class="Dv">uvmexp.reserve_kernel</code> (if the current thread is not the pagedaemon). <code class="Dv">UVM_PGA_ZERO</code> causes the returned page to be filled with zeroes, either by allocating it from a pool of pre-zeroed pages or by zeroing it in-line as necessary.
+    <p><code class="Dv">UVM_PGA_USERESERVE</code> means to allocate a page even if that will result in the number of free pages being lower than <code class="Dv">uvmexp.reserve_pagedaemon</code> (if the current thread is the pagedaemon) or <code class="Dv">uvmexp.reserve_kernel</code> (if the current thread is not the pagedaemon).</p>
 
-    <div class="Pp"></div><span class="Fn">uvm_pagerealloc</span>() reallocates page <span class="Fa">pg</span> to a new object <span class="Fa">newobj</span>, at a new offset <span class="Fa">newoff</span>.
+    <p><code class="Dv">UVM_PGA_ZERO</code> causes the returned page to be filled with zeroes, either by allocating it from a pool of pre-zeroed pages or by zeroing it in-line as necessary.</p>
 
-    <div class="Pp"></div><span class="Fn">uvm_pagefree</span>() frees the physical page <span class="Fa">pg</span>. If the content of the page is known to be zero-filled, caller should set <code class="Dv">PG_ZERO</code> in pg-&gt;flags so that the page allocator will use the page to serve future <code class="Dv">UVM_PGA_ZERO</code> requests efficiently.
+    <p><span class="Fn">uvm_pagerealloc</span>() reallocates page <span class="Fa">pg</span> to a new object <span class="Fa">newobj</span>, at a new offset <span class="Fa">newoff</span>.</p>
 
-    <div class="Pp"></div><span class="Fn">uvm_pglistalloc</span>() allocates a list of pages for size <span class="Fa">size</span> byte under various constraints. <span class="Fa">low</span> and <span class="Fa">high</span> describe the lowest and highest addresses acceptable for the list. If <span class="Fa">alignment</span> is non-zero, it describes the required alignment of the list, in power-of-two notation. If <span class="Fa">boundary</span> is non-zero, no segment of the list may cross this power-of-two boundary, relative to zero. <span class="Fa">nsegs</span> is the maximum number of physically contiguous segments. If <span class="Fa">waitok</span> is non-zero, the function may sleep until enough memory is available. (It also may give up in some situations, so a non-zero <span class="Fa">waitok</span> does not imply that <span class="Fn">uvm_pglistalloc</span>() cannot return an error.) The allocated memory is returned in the <span class="Fa">rlist</span> list; the caller has to provide storage only, the list is initialized by <span class="Fn">uvm_pglistalloc</span>().
+    <p><span class="Fn">uvm_pagefree</span>() frees the physical page <span class="Fa">pg</span>. If the content of the page is known to be zero-filled, caller should set <code class="Dv">PG_ZERO</code> in pg-&gt;flags so that the page allocator will use the page to serve future <code class="Dv">UVM_PGA_ZERO</code> requests efficiently.</p>
 
-    <div class="Pp"></div><span class="Fn">uvm_pglistfree</span>() frees the list of pages pointed to by <span class="Fa">list</span>. If the content of the page is known to be zero-filled, caller should set <code class="Dv">PG_ZERO</code> in pg-&gt;flags so that the page allocator will use the page to serve future <code class="Dv">UVM_PGA_ZERO</code> requests efficiently.
+    <p><span class="Fn">uvm_pglistalloc</span>() allocates a list of pages for size <span class="Fa">size</span> byte under various constraints. <span class="Fa">low</span> and <span class="Fa">high</span> describe the lowest and highest addresses acceptable for the list. If <span class="Fa">alignment</span> is non-zero, it describes the required alignment of the list, in power-of-two notation. If <span class="Fa">boundary</span> is non-zero, no segment of the list may cross this power-of-two boundary, relative to zero. <span class="Fa">nsegs</span> is the maximum number of physically contiguous segments. If <span class="Fa">waitok</span> is non-zero, the function may sleep until enough memory is available. (It also may give up in some situations, so a non-zero <span class="Fa">waitok</span> does not imply that <span class="Fn">uvm_pglistalloc</span>() cannot return an error.) The allocated memory is returned in the <span class="Fa">rlist</span> list; the caller has to provide storage only, the list is initialized by <span class="Fn">uvm_pglistalloc</span>().</p>
 
-    <div class="Pp"></div><span class="Fn">uvm_page_physload</span>() loads physical memory segments into VM space on the specified <span class="Fa">free_list</span>. It must be called at system boot time to set up physical memory management pages. The arguments describe the <span class="Fa">start</span> and <span class="Fa">end</span> of the physical addresses of the segment, and the available start and end addresses of pages not already in use. If a system has memory banks of different speeds the slower memory should be given a higher <span class="Fa">free_list</span> value.
+    <p><span class="Fn">uvm_pglistfree</span>() frees the list of pages pointed to by <span class="Fa">list</span>. If the content of the page is known to be zero-filled, caller should set <code class="Dv">PG_ZERO</code> in pg-&gt;flags so that the page allocator will use the page to serve future <code class="Dv">UVM_PGA_ZERO</code> requests efficiently.</p>
+
+    <p><span class="Fn">uvm_page_physload</span>() loads physical memory segments into VM space on the specified <span class="Fa">free_list</span>. It must be called at system boot time to set up physical memory management pages. The arguments describe the <span class="Fa">start</span> and <span class="Fa">end</span> of the physical addresses of the segment, and the available start and end addresses of pages not already in use. If a system has memory banks of different speeds the slower memory should be given a higher <span class="Fa">free_list</span> value.</p>
 
     <h2 class="Sh" id="PROCESSES">PROCESSES</h2>
 
@@ -175,9 +174,7 @@
       <li class="It-ohang"><span class="Ft">void</span> <span class="Fn">uvm_scheduler</span>(<span class="Fa">void</span>);</li>
     </ul>
 
-    <div class="Pp"></div><span class="Fn">uvm_pageout</span>() is the main loop for the page daemon.
-
-    <div class="Pp"></div><span class="Fn">uvm_scheduler</span>() is the process zero main loop, which is to be called after the system has finished starting other processes. It handles the swapping in of runnable, swapped out processes in priority order.
+    <p><span class="Fn">uvm_pageout</span>() is the main loop for the page daemon. <span class="Fn">uvm_scheduler</span>() is the process zero main loop, which is to be called after the system has finished starting other processes. It handles the swapping in of runnable, swapped out processes in priority order.</p>
 
     <h2 class="Sh" id="PAGE_LOAN">PAGE LOAN</h2>
 
@@ -187,9 +184,7 @@
       <li class="It-ohang"><span class="Ft">void</span> <span class="Fn">uvm_unloan</span>(<span class="Fa">void *v</span>, <span class="Fa">int npages</span>, <span class="Fa">int flags</span>);</li>
     </ul>
 
-    <div class="Pp"></div><span class="Fn">uvm_loan</span>() loans pages in a map out to anons or to the kernel. <span class="Fa">map</span> should be unlocked, <span class="Fa">start</span> and <span class="Fa">len</span> should be multiples of <code class="Dv">PAGE_SIZE</code>. Argument <span class="Fa">flags</span> should be one of
-
-    <div class="Pp"></div>
+    <p><span class="Fn">uvm_loan</span>() loans pages in a map out to anons or to the kernel. <span class="Fa">map</span> should be unlocked, <span class="Fa">start</span> and <span class="Fa">len</span> should be multiples of <code class="Dv">PAGE_SIZE</code>. Argument <span class="Fa">flags</span> should be one of</p>
 
     <div class="Bd">
       <pre class="Li">
@@ -198,11 +193,7 @@
 </pre>
     </div>
 
-    <div class="Pp"></div><span class="Fa">v</span> should be pointer to array of pointers to <code class="Li">struct anon</code> or <code class="Li">struct vm_page</code>, as appropriate. The caller has to allocate memory for the array and ensure it's big enough to hold <span class="Fa">len / PAGE_SIZE</span> pointers. Returns 0 for success, or appropriate error number otherwise. Note that wired pages can't be loaned out and <span class="Fn">uvm_loan</span>() will fail in that case.
-
-    <div class="Pp"></div><span class="Fn">uvm_unloan</span>() kills loans on pages or anons. The <span class="Fa">v</span> must point to the array of pointers initialized by previous call to <span class="Fn">uvm_loan</span>(). <span class="Fa">npages</span> should match number of pages allocated for loan, this also matches number of items in the array. Argument <span class="Fa">flags</span> should be one of
-
-    <div class="Pp"></div>
+    <p><span class="Fa">v</span> should be pointer to array of pointers to <code class="Li">struct anon</code> or <code class="Li">struct vm_page</code>, as appropriate. The caller has to allocate memory for the array and ensure it's big enough to hold <span class="Fa">len / PAGE_SIZE</span> pointers. Returns 0 for success, or appropriate error number otherwise. Note that wired pages can't be loaned out and <span class="Fn">uvm_loan</span>() will fail in that case. <span class="Fn">uvm_unloan</span>() kills loans on pages or anons. The <span class="Fa">v</span> must point to the array of pointers initialized by previous call to <span class="Fn">uvm_loan</span>(). <span class="Fa">npages</span> should match number of pages allocated for loan, this also matches number of items in the array. Argument <span class="Fa">flags</span> should be one of</p>
 
     <div class="Bd">
       <pre class="Li">
@@ -211,7 +202,7 @@
 </pre>
     </div>
 
-    <div class="Pp"></div>and should match what was used for previous call to <span class="Fn">uvm_loan</span>().
+    <p>and should match what was used for previous call to <span class="Fn">uvm_loan</span>().</p>
 
     <h2 class="Sh" id="MISCELLANEOUS_FUNCTIONS">MISCELLANEOUS FUNCTIONS</h2>
 
@@ -241,9 +232,7 @@
       <li class="It-ohang"><span class="Ft">void</span> <span class="Fn">uvm_vnp_setsize</span>(<span class="Fa">struct vnode *vp</span>, <span class="Fa">voff_t newsize</span>);</li>
     </ul>
 
-    <div class="Pp"></div>The <span class="Fn">uao_create</span>(), <span class="Fn">uao_detach</span>(), and <span class="Fn">uao_reference</span>() functions operate on anonymous memory objects, such as those used to support System V shared memory. <span class="Fn">uao_create</span>() returns an object of size <span class="Fa">size</span> with flags:
-
-    <div class="Pp"></div>
+    <p>The <span class="Fn">uao_create</span>(), <span class="Fn">uao_detach</span>(), and <span class="Fn">uao_reference</span>() functions operate on anonymous memory objects, such as those used to support System V shared memory. <span class="Fn">uao_create</span>() returns an object of size <span class="Fa">size</span> with flags:</p>
 
     <div class="Bd">
       <pre class="Li">
@@ -252,23 +241,25 @@
 </pre>
     </div>
 
-    <div class="Pp"></div>which can only be used once each at system boot time. <span class="Fn">uao_reference</span>() creates an additional reference to the named anonymous memory object. <span class="Fn">uao_detach</span>() removes a reference from the named anonymous memory object, destroying it if removing the last reference.
+    <p>which can only be used once each at system boot time.</p>
 
-    <div class="Pp"></div><span class="Fn">uvm_chgkprot</span>() changes the protection of kernel memory from <span class="Fa">addr</span> to <span class="Fa">addr + len</span> to the value of <span class="Fa">rw</span>. This is primarily useful for debuggers, for setting breakpoints. This function is only available with options <code class="Dv">KGDB</code>.
+    <p><span class="Fn">uao_reference</span>() creates an additional reference to the named anonymous memory object.</p>
 
-    <div class="Pp"></div><span class="Fn">uvm_kernacc</span>() checks the access at address <span class="Fa">addr</span> to <span class="Fa">addr + len</span> for <span class="Fa">rw</span> access in the kernel address space.
+    <p><span class="Fn">uao_detach</span>() removes a reference from the named anonymous memory object, destroying it if removing the last reference.</p>
 
-    <div class="Pp"></div><span class="Fn">uvm_vslock</span>() and <span class="Fn">uvm_vsunlock</span>() control the wiring and unwiring of pages for process <span class="Fa">p</span> from <span class="Fa">addr</span> to <span class="Fa">addr + len</span>. These functions are normally used to wire memory for I/O.
+    <p><span class="Fn">uvm_chgkprot</span>() changes the protection of kernel memory from <span class="Fa">addr</span> to <span class="Fa">addr + len</span> to the value of <span class="Fa">rw</span>. This is primarily useful for debuggers, for setting breakpoints. This function is only available with options <code class="Dv">KGDB</code>.</p>
 
-    <div class="Pp"></div><span class="Fn">uvm_meter</span>() calculates the load average.
+    <p><span class="Fn">uvm_kernacc</span>() checks the access at address <span class="Fa">addr</span> to <span class="Fa">addr + len</span> for <span class="Fa">rw</span> access in the kernel address space.</p>
 
-    <div class="Pp"></div><span class="Fn">uvm_proc_fork</span>() forks a virtual address space for process' (old) <span class="Fa">p1</span> and (new) <span class="Fa">p2</span>. If the <span class="Fa">shared</span> argument is non zero, p1 shares its address space with p2, otherwise a new address space is created. This function currently has no return value, and thus cannot fail. In the future, this function will be changed to allow it to fail in low memory conditions.
+    <p><span class="Fn">uvm_vslock</span>() and <span class="Fn">uvm_vsunlock</span>() control the wiring and unwiring of pages for process <span class="Fa">p</span> from <span class="Fa">addr</span> to <span class="Fa">addr + len</span>. These functions are normally used to wire memory for I/O.</p>
 
-    <div class="Pp"></div><span class="Fn">uvm_grow</span>() increases the stack segment of process <span class="Fa">p</span> to include <span class="Fa">sp</span>.
+    <p><span class="Fn">uvm_meter</span>() calculates the load average.</p>
 
-    <div class="Pp"></div><span class="Fn">uvn_findpages</span>() looks up or creates pages in <span class="Fa">uobj</span> at offset <span class="Fa">offset</span>, marks them busy and returns them in the <span class="Fa">pps</span> array. Currently <span class="Fa">uobj</span> must be a vnode object. The number of pages requested is pointed to by <span class="Fa">npagesp</span>, and this value is updated with the actual number of pages returned. The flags can be any bitwise inclusive-or of:
+    <p><span class="Fn">uvm_proc_fork</span>() forks a virtual address space for process' (old) <span class="Fa">p1</span> and (new) <span class="Fa">p2</span>. If the <span class="Fa">shared</span> argument is non zero, p1 shares its address space with p2, otherwise a new address space is created. This function currently has no return value, and thus cannot fail. In the future, this function will be changed to allow it to fail in low memory conditions.</p>
 
-    <div class="Pp"></div>
+    <p><span class="Fn">uvm_grow</span>() increases the stack segment of process <span class="Fa">p</span> to include <span class="Fa">sp</span>.</p>
+
+    <p><span class="Fn">uvn_findpages</span>() looks up or creates pages in <span class="Fa">uobj</span> at offset <span class="Fa">offset</span>, marks them busy and returns them in the <span class="Fa">pps</span> array. Currently <span class="Fa">uobj</span> must be a vnode object. The number of pages requested is pointed to by <span class="Fa">npagesp</span>, and this value is updated with the actual number of pages returned. The flags can be any bitwise inclusive-or of:</p>
 
     <div class="Bl-tag">
       <ul class="Bl-tag">
@@ -288,7 +279,7 @@
       </ul>
     </div>
 
-    <div class="Pp"></div><span class="Fn">uvm_vnp_setsize</span>() sets the size of vnode <span class="Fa">vp</span> to <span class="Fa">newsize</span>. Caller must hold a reference to the vnode. If the vnode shrinks, pages no longer used are discarded.
+    <p><span class="Fn">uvm_vnp_setsize</span>() sets the size of vnode <span class="Fa">vp</span> to <span class="Fa">newsize</span>. Caller must hold a reference to the vnode. If the vnode shrinks, pages no longer used are discarded.</p>
 
     <h2 class="Sh" id="MISCELLANEOUS_MACROS">MISCELLANEOUS MACROS</h2>
 
@@ -302,13 +293,11 @@
       <li class="It-ohang"><span class="Ft">paddr_t</span> <span class="Fn">trunc_page</span>(<span class="Fa">address</span>);</li>
     </ul>
 
-    <div class="Pp"></div>The <span class="Fn">atop</span>() macro converts a physical address <span class="Fa">pa</span> into a page number. The <span class="Fn">ptoa</span>() macro does the opposite by converting a page number <span class="Fa">pn</span> into a physical address.
+    <p>The <span class="Fn">atop</span>() macro converts a physical address <span class="Fa">pa</span> into a page number. The <span class="Fn">ptoa</span>() macro does the opposite by converting a page number <span class="Fa">pn</span> into a physical address. <span class="Fn">round_page</span>() and <span class="Fn">trunc_page</span>() macros return a page address boundary from rounding <span class="Fa">address</span> up and down, respectively, to the nearest page boundary. These macros work for either addresses or byte counts.</p>
 
-    <div class="Pp"></div><span class="Fn">round_page</span>() and <span class="Fn">trunc_page</span>() macros return a page address boundary from rounding <span class="Fa">address</span> up and down, respectively, to the nearest page boundary. These macros work for either addresses or byte counts.
+    <h2 class="Sh" id="SYSCTL">SYSCTL</h2>
 
-    <h2 class="Sh" id="SYSCTL">SYSCTL</h2>UVM provides support for the <code class="Dv">CTL_VM</code> domain of the <a class="Xr">sysctl(3)</a> hierarchy. It handles the <code class="Dv">VM_LOADAVG</code>, <code class="Dv">VM_METER</code>, <code class="Dv">VM_UVMEXP</code>, and <code class="Dv">VM_UVMEXP2</code> nodes, which return the current load averages, calculates current VM totals, returns the uvmexp structure, and a kernel version independent view of the uvmexp structure, respectively. It also exports a number of tunables that control how much VM space is allowed to be consumed by various tasks. The load averages are typically accessed from userland using the <a class="Xr">getloadavg(3)</a> function. The uvmexp structure has all global state of the UVM system, and has the following members:
-
-    <div class="Pp"></div>
+    <p>UVM provides support for the <code class="Dv">CTL_VM</code> domain of the <a class="Xr">sysctl(3)</a> hierarchy. It handles the <code class="Dv">VM_LOADAVG</code>, <code class="Dv">VM_METER</code>, <code class="Dv">VM_UVMEXP</code>, and <code class="Dv">VM_UVMEXP2</code> nodes, which return the current load averages, calculates current VM totals, returns the uvmexp structure, and a kernel version independent view of the uvmexp structure, respectively. It also exports a number of tunables that control how much VM space is allowed to be consumed by various tasks. The load averages are typically accessed from userland using the <a class="Xr">getloadavg(3)</a> function. The uvmexp structure has all global state of the UVM system, and has the following members:</p>
 
     <div class="Bd">
       <pre class="Li">
@@ -389,25 +378,45 @@ int pddeact;    /* number of pages daemon deactivates */
 </pre>
     </div>
 
-    <h2 class="Sh" id="NOTES">NOTES</h2><span class="Fn">uvm_chgkprot</span>() is only available if the kernel has been compiled with options <code class="Dv">KGDB</code>.
+    <h2 class="Sh" id="NOTES">NOTES</h2>
 
-    <div class="Pp"></div>All structure and types whose names begin with &#8220;vm_&#8221; will be renamed to &#8220;uvm_&#8221;.
+    <p><span class="Fn">uvm_chgkprot</span>() is only available if the kernel has been compiled with options <code class="Dv">KGDB</code>. All structure and types whose names begin with &#8220;vm_&#8221; will be renamed to &#8220;uvm_&#8221;.</p>
 
     <h2 class="Sh" id="SEE_ALSO">SEE ALSO</h2>
 
     <ul>
-      <li><a class="Xr">swapctl(2)</a>, <a class="Xr">getloadavg(3)</a>, <a class="Xr">kvm(3)</a>, <a class="Xr">sysctl(3)</a>, <a class="Xr">ddb(4)</a>, <a class="Xr">options(4)</a>, <a class="Xr">memoryallocators(9)</a>, <a class="Xr">pmap(9)</a>, <a class="Xr">ubc(9)</a>, <a class="Xr">uvm_km(9)</a>, <a class="Xr">uvm_map(9)</a></li>
-
       <li>
-        <div class="Pp"></div><cite class="Rs"><span class="RsA">Charles D. Cranor</span> and <span class="RsA">Gurudatta M. Parulkar</span>, <span class="RsT">The UVM Virtual Memory System</span>, <i class="RsB">Proceedings of the USENIX Annual Technical Conference</i>, <i class="RsI">USENIX Association</i>, <a class="RsU" href="http://www.usenix.org/event/usenix99/full_papers/cranor/cranor.pdf">http://www.usenix.org/event/usenix99/full_papers/cranor/cranor.pdf</a>, <span class="RsP">117-130</span>, <span class="RsD">June 6-11, 1999</span>.</cite>
+        <ul>
+          <li><a class="Xr">swapctl(2)</a></li>
+
+          <li><a class="Xr">getloadavg(3)</a></li>
+
+          <li><a class="Xr">kvm(3)</a></li>
+
+          <li><a class="Xr">sysctl(3)</a></li>
+
+          <li><a class="Xr">ddb(4)</a></li>
+
+          <li><a class="Xr">options(4)</a></li>
+
+          <li><a class="Xr">memoryallocators(9)</a></li>
+
+          <li><a class="Xr">pmap(9)</a></li>
+
+          <li><a class="Xr">ubc(9)</a></li>
+
+          <li><a class="Xr">uvm_km(9)</a></li>
+
+          <li><a class="Xr">uvm_map(9)</a></li>
+        </ul>
       </li>
+
+      <li><cite class="Rs"><span class="RsA">Charles D. Cranor</span> and <span class="RsA">Gurudatta M. Parulkar</span>, <span class="RsT">The UVM Virtual Memory System</span>, <i class="RsB">Proceedings of the USENIX Annual Technical Conference</i>, <i class="RsI">USENIX Association</i>, <a class="RsU" href="http://www.usenix.org/event/usenix99/full_papers/cranor/cranor.pdf">http://www.usenix.org/event/usenix99/full_papers/cranor/cranor.pdf</a>, <span class="RsP">117-130</span>, <span class="RsD">June 6-11, 1999</span>.</cite></li>
     </ul>
 
     <h2 class="Sh" id="HISTORY">HISTORY</h2>
 
-    <p>UVM is a new VM system developed at Washington University in St. Louis (Missouri). UVM's roots lie partly in the Mach-based <span class="Ux">4.4BSD</span> VM system, the <span class="Ux">FreeBSD</span> VM system, and the SunOS 4 VM system. UVM's basic structure is based on the <span class="Ux">4.4BSD</span> VM system. UVM's new anonymous memory system is based on the anonymous memory system found in the SunOS 4 VM (as described in papers published by Sun Microsystems, Inc.). UVM also includes a number of features new to <span class="Ux">BSD</span> including page loanout, map entry passing, simplified copy-on-write, and clustered anonymous memory pageout. UVM is also further documented in an August 1998 dissertation by Charles D. Cranor.</p>
-
-    <div class="Pp"></div>UVM appeared in <span class="Ux">NetBSD 1.4</span>.
+    <p>UVM is a new VM system developed at Washington University in St. Louis (Missouri). UVM's roots lie partly in the Mach-based <span class="Ux">4.4BSD</span> VM system, the <span class="Ux">FreeBSD</span> VM system, and the SunOS 4 VM system. UVM's basic structure is based on the <span class="Ux">4.4BSD</span> VM system. UVM's new anonymous memory system is based on the anonymous memory system found in the SunOS 4 VM (as described in papers published by Sun Microsystems, Inc.). UVM also includes a number of features new to <span class="Ux">BSD</span> including page loanout, map entry passing, simplified copy-on-write, and clustered anonymous memory pageout. UVM is also further documented in an August 1998 dissertation by Charles D. Cranor.</p>UVM appeared in <span class="Ux">NetBSD 1.4</span>.
 
     <h2 class="Sh" id="AUTHORS">AUTHORS</h2>
 
