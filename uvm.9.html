@@ -6,7 +6,7 @@
   <meta charset="utf-8">
   <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/dreampulse/computer-modern-web-font/master/fonts.css">
   <style type="text/css">
-    body {
+  body {
       font-family: "Computer Modern Serif", serif;
     }
     .wrapper {
@@ -287,8 +287,7 @@
 
     <div class="Pp"></div><span class="Fn">round_page</span>() and <span class="Fn">trunc_page</span>() macros return a page address boundary from rounding <span class="Fa">address</span> up and down, respectively, to the nearest page boundary. These macros work for either addresses or byte counts.
 
-    <h2 class="Sh" id="SYSCTL">SYSCTL</h2>
-    UVM provides support for the <code class="Dv">CTL_VM</code> domain of the <a class="Xr">sysctl(3)</a> hierarchy. It handles the <code class="Dv">VM_LOADAVG</code>, <code class="Dv">VM_METER</code>, <code class="Dv">VM_UVMEXP</code>, and <code class="Dv">VM_UVMEXP2</code> nodes, which return the current load averages, calculates current VM totals, returns the uvmexp structure, and a kernel version independent view of the uvmexp structure, respectively. It also exports a number of tunables that control how much VM space is allowed to be consumed by various tasks. The load averages are typically accessed from userland using the <a class="Xr">getloadavg(3)</a> function. The uvmexp structure has all global state of the UVM system, and has the following members:
+    <h2 class="Sh" id="SYSCTL">SYSCTL</h2>UVM provides support for the <code class="Dv">CTL_VM</code> domain of the <a class="Xr">sysctl(3)</a> hierarchy. It handles the <code class="Dv">VM_LOADAVG</code>, <code class="Dv">VM_METER</code>, <code class="Dv">VM_UVMEXP</code>, and <code class="Dv">VM_UVMEXP2</code> nodes, which return the current load averages, calculates current VM totals, returns the uvmexp structure, and a kernel version independent view of the uvmexp structure, respectively. It also exports a number of tunables that control how much VM space is allowed to be consumed by various tasks. The load averages are typically accessed from userland using the <a class="Xr">getloadavg(3)</a> function. The uvmexp structure has all global state of the UVM system, and has the following members:
 
     <div class="Pp"></div>
 
