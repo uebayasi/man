@@ -5,31 +5,8 @@
   <meta name="generator" content="HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 15.18.1), see www.w3.org">
   <meta charset="utf-8">
   <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/dreampulse/computer-modern-web-font/master/fonts.css">
-  <style type="text/css">
-  body {
-      font-family: "Computer Modern Serif", serif;
-    }
-    .wrapper {
-      display: grid;
-      grid-template-columns: repeat(12, [col-start] 1fr);
-      grid-gap: 20px;
-    }
-    .manual-title {
-      grid-column: col-start 2 / span 11;
-      grid-row: 1;
-    }
-    .manual-text {
-      grid-column: col-start 3 / span 8;
-      grid-row: 2;
-    }
-    footer {
-      grid-column: col-start 5 / span 2;
-      grid-row: 3;
-    }
-    .Ft, .Fn, .Fa {
-      font-family: "Computer Modern Typewriter", serif;
-    }
-  </style>
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" type="text/css" href="man.css">
 
   <title>UVM(9)</title>
 </head>
@@ -37,6 +14,48 @@
 <body class="wrapper">
   <div class="manual-title">
     <h1>UVM(9) &#8212; <span class="Nd">virtual memory system external interface</span></h1>
+  </div>
+
+  <div class="manual-content">
+    <h3>Contents</h3>
+
+    <ol>
+      <li>SYNOPSIS</li>
+
+      <li>DESCRIPTION</li>
+
+      <li>INITIALIZATION</li>
+
+      <li>VIRTUAL ADDRESS SPACE MANAGEMENT</li>
+
+      <li>PAGE FAULT HANDLING</li>
+
+      <li>MEMORY MAPPING FILES AND DEVICES</li>
+
+      <li>VIRTUAL MEMORY I/O</li>
+
+      <li>ALLOCATION OF KERNEL MEMORY</li>
+
+      <li>ALLOCATION OF PHYSICAL MEMORY</li>
+
+      <li>PROCESSES</li>
+
+      <li>PAGE LOAN</li>
+
+      <li>MISCELLANEOUS FUNCTIONS</li>
+
+      <li>MISCELLANEOUS MACROS</li>
+
+      <li>SYSCTL</li>
+
+      <li>NOTES</li>
+
+      <li>SEE ALSO</li>
+
+      <li>HISTORY</li>
+
+      <li>AUTHORS</li>
+    </ol>
   </div>
 
   <div class="manual-text">
@@ -374,19 +393,31 @@ int pddeact;    /* number of pages daemon deactivates */
 
     <div class="Pp"></div>All structure and types whose names begin with &#8220;vm_&#8221; will be renamed to &#8220;uvm_&#8221;.
 
-    <h2 class="Sh" id="SEE_ALSO">SEE ALSO</h2><a class="Xr">swapctl(2)</a>, <a class="Xr">getloadavg(3)</a>, <a class="Xr">kvm(3)</a>, <a class="Xr">sysctl(3)</a>, <a class="Xr">ddb(4)</a>, <a class="Xr">options(4)</a>, <a class="Xr">memoryallocators(9)</a>, <a class="Xr">pmap(9)</a>, <a class="Xr">ubc(9)</a>, <a class="Xr">uvm_km(9)</a>, <a class="Xr">uvm_map(9)</a>
+    <h2 class="Sh" id="SEE_ALSO">SEE ALSO</h2>
 
-    <div class="Pp"></div><cite class="Rs"><span class="RsA">Charles D. Cranor</span> and <span class="RsA">Gurudatta M. Parulkar</span>, <span class="RsT">The UVM Virtual Memory System</span>, <i class="RsB">Proceedings of the USENIX Annual Technical Conference</i>, <i class="RsI">USENIX Association</i>, <a class="RsU" href="http://www.usenix.org/event/usenix99/full_papers/cranor/cranor.pdf">http://www.usenix.org/event/usenix99/full_papers/cranor/cranor.pdf</a>, <span class="RsP">117-130</span>, <span class="RsD">June 6-11, 1999</span>.</cite>
+    <ul>
+      <li><a class="Xr">swapctl(2)</a>, <a class="Xr">getloadavg(3)</a>, <a class="Xr">kvm(3)</a>, <a class="Xr">sysctl(3)</a>, <a class="Xr">ddb(4)</a>, <a class="Xr">options(4)</a>, <a class="Xr">memoryallocators(9)</a>, <a class="Xr">pmap(9)</a>, <a class="Xr">ubc(9)</a>, <a class="Xr">uvm_km(9)</a>, <a class="Xr">uvm_map(9)</a></li>
 
-    <h2 class="Sh" id="HISTORY">HISTORY</h2>UVM is a new VM system developed at Washington University in St. Louis (Missouri). UVM's roots lie partly in the Mach-based <span class="Ux">4.4BSD</span> VM system, the <span class="Ux">FreeBSD</span> VM system, and the SunOS 4 VM system. UVM's basic structure is based on the <span class="Ux">4.4BSD</span> VM system. UVM's new anonymous memory system is based on the anonymous memory system found in the SunOS 4 VM (as described in papers published by Sun Microsystems, Inc.). UVM also includes a number of features new to <span class="Ux">BSD</span> including page loanout, map entry passing, simplified copy-on-write, and clustered anonymous memory pageout. UVM is also further documented in an August 1998 dissertation by Charles D. Cranor.
+      <li>
+        <div class="Pp"></div><cite class="Rs"><span class="RsA">Charles D. Cranor</span> and <span class="RsA">Gurudatta M. Parulkar</span>, <span class="RsT">The UVM Virtual Memory System</span>, <i class="RsB">Proceedings of the USENIX Annual Technical Conference</i>, <i class="RsI">USENIX Association</i>, <a class="RsU" href="http://www.usenix.org/event/usenix99/full_papers/cranor/cranor.pdf">http://www.usenix.org/event/usenix99/full_papers/cranor/cranor.pdf</a>, <span class="RsP">117-130</span>, <span class="RsD">June 6-11, 1999</span>.</cite>
+      </li>
+    </ul>
+
+    <h2 class="Sh" id="HISTORY">HISTORY</h2>
+
+    <p>UVM is a new VM system developed at Washington University in St. Louis (Missouri). UVM's roots lie partly in the Mach-based <span class="Ux">4.4BSD</span> VM system, the <span class="Ux">FreeBSD</span> VM system, and the SunOS 4 VM system. UVM's basic structure is based on the <span class="Ux">4.4BSD</span> VM system. UVM's new anonymous memory system is based on the anonymous memory system found in the SunOS 4 VM (as described in papers published by Sun Microsystems, Inc.). UVM also includes a number of features new to <span class="Ux">BSD</span> including page loanout, map entry passing, simplified copy-on-write, and clustered anonymous memory pageout. UVM is also further documented in an August 1998 dissertation by Charles D. Cranor.</p>
 
     <div class="Pp"></div>UVM appeared in <span class="Ux">NetBSD 1.4</span>.
 
-    <h2 class="Sh" id="AUTHORS">AUTHORS</h2><span class="An">Charles D. Cranor</span> &lt;<a class="Mt" href="mailto:chuck@ccrc.wustl.edu">chuck@ccrc.wustl.edu</a>&gt; designed and implemented UVM.
+    <h2 class="Sh" id="AUTHORS">AUTHORS</h2>
 
-    <div class="Pp"></div><span class="An">Matthew Green</span> &lt;<a class="Mt" href="mailto:mrg@eterna.com.au">mrg@eterna.com.au</a>&gt; wrote the swap-space management code and handled the logistical issues involved with merging UVM into the <span class="Ux">NetBSD</span> source tree.
+    <ul>
+      <li><span class="An">Charles D. Cranor</span> &lt;<a class="Mt" href="mailto:chuck@ccrc.wustl.edu">chuck@ccrc.wustl.edu</a>&gt; designed and implemented UVM.</li>
 
-    <div class="Pp"></div><span class="An">Chuck Silvers</span> &lt;<a class="Mt" href="mailto:chuq@chuq.com">chuq@chuq.com</a>&gt; implemented the aobj pager, thus allowing UVM to support System V shared memory and process swapping.
+      <li><span class="An">Matthew Green</span> &lt;<a class="Mt" href="mailto:mrg@eterna.com.au">mrg@eterna.com.au</a>&gt; wrote the swap-space management code and handled the logistical issues involved with merging UVM into the <span class="Ux">NetBSD</span> source tree.</li>
+
+      <li><span class="An">Chuck Silvers</span> &lt;<a class="Mt" href="mailto:chuq@chuq.com">chuq@chuq.com</a>&gt; implemented the aobj pager, thus allowing UVM to support System V shared memory and process swapping.</li>
+    </ul>
   </div>
 
   <footer>
