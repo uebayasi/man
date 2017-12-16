@@ -6,14 +6,18 @@ body {
   grid-template-columns: repeat(12, [col-start] 1fr);
 }
 .manual-title {
+  /*
+  color: white;
+  background: black;
+   */
   grid-column: col-start 3 / span 8;
   grid-row: 1;
   padding: 1em;
 }
 .manual-content {
+  padding: 1em;
   grid-column: col-start 3 / span 3;
   grid-row: 2;
-  padding: 1em;
 }
 .manual-text {
   grid-column: col-start 6 / span 5;
@@ -43,6 +47,8 @@ pre {
 }
 .description {
   font-size: 1.25em;
+}
+.contents {
   background: lightgrey;
   padding: 1em;
 }
